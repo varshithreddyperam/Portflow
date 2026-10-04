@@ -19,3 +19,6 @@ env/
 
 # Testing
 .pytest_cache/
+
+# Visual Studio / VS Code
+.vs/
