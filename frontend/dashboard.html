@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - PortFlow</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/styles.css?v=3.0">
+</head>
+<body>
+  <div id="wrapper">
+    <!-- Sidebar Navigation -->
+    <div id="sidebar">
+      <div class="brand-header"><i class="bi bi-compass"></i> PortFlow</div>
+      <ul class="sidebar-nav">
+        <li class="nav-item"><a href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="ports.html"><i class="bi bi-geo-alt"></i> Ports</a></li>
+        <li class="nav-item"><a href="ships.html"><i class="bi bi-water"></i> Ships</a></li>
+        <li class="nav-item"><a href="containers.html"><i class="bi bi-box-seam"></i> Containers</a></li>
+        <li class="nav-item"><a href="routes.html"><i class="bi bi-signpost-split"></i> Routes</a></li>
+        <li class="nav-item"><a href="simulation.html"><i class="bi bi-play-circle"></i> Simulation</a></li>
+        <li class="nav-item"><a href="reports.html"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
+        <li class="nav-item"><a href="profile.html"><i class="bi bi-person-circle"></i> Profile</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="main-content">
+      <!-- Top Navbar -->
+      <div class="top-navbar">
+        <h5 class="m-0 fw-semibold text-dark">Dashboard Overview</h5>
+        <div class="d-flex align-items-center gap-3">
+          <button id="themeToggleBtn" class="btn btn-outline-secondary btn-sm"><i class="bi bi-moon-stars-fill"></i> Dark Mode</button>
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-circle fs-5 text-secondary"></i>
+            <div>
+              <span id="userDisplay" class="fw-medium text-dark small">Admin</span>
+              <span id="roleBadge" class="badge bg-secondary ms-1">Administrator</span>
+            </div>
+          </div>
+          <button onclick="App.logout()" class="btn btn-sm btn-outline-danger" title="Logout"><i class="bi bi-box-arrow-right"></i> Logout</button>
+        </div>
+      </div>
+
+      <div class="content-body">
+
+        <!-- 4 Metric Cards Row -->
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm border-start border-4 border-success">
+              <div class="card-body py-3">
+                <div class="text-muted small fw-medium">Total Ports</div>
+                <div class="d-flex align-items-baseline justify-content-between mt-1">
+                  <h3 id="statPorts" class="m-0 fw-bold text-dark">0</h3>
+                  <span class="text-success fs-5"><i class="bi bi-geo-alt"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm border-start border-4 border-success">
+              <div class="card-body py-3">
+                <div class="text-muted small fw-medium">Ships Status</div>
+                <div class="d-flex align-items-baseline justify-content-between mt-1">
+                  <div>
+                    <h3 id="statActiveShips" class="m-0 fw-bold text-dark d-inline">0</h3>
+                    <span class="small text-muted ms-1">(<span id="statDockedShips">0</span> Docked / <span id="statTransitShips">0</span> Transit)</span>
+                  </div>
+                  <span class="text-success fs-5"><i class="bi bi-water"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm border-start border-4 border-dark">
+              <div class="card-body py-3">
+                <div class="text-muted small fw-medium">Total Containers</div>
+                <div class="d-flex align-items-baseline justify-content-between mt-1">
+                  <h3 id="statContainers" class="m-0 fw-bold text-dark">0</h3>
+                  <span class="text-dark fs-5"><i class="bi bi-box-seam"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm border-start border-4 border-warning">
+              <div class="card-body py-3">
+                <div class="text-muted small fw-medium">Fuel Consumed</div>
+                <div class="d-flex align-items-baseline justify-content-between mt-1">
+                  <h3 id="statFuel" class="m-0 fw-bold text-dark fs-4">0 L</h3>
+                  <span id="statSimStatus" class="badge bg-secondary">Stopped</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Column Main Dashboard Content -->
+        <div class="row g-4">
+
+          <!-- Left Column (8 cols): Port Occupancy Table & Movement Activity -->
+          <div class="col-lg-8">
+
+            <!-- Port Occupancy Progress Table -->
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="m-0 fw-bold text-dark"><i class="bi bi-geo-alt me-2 text-success"></i>Port Occupancy & Storage Status</h6>
+                <a href="ports.html" class="btn btn-sm btn-link text-decoration-none p-0 text-success fw-semibold">Manage Ports &rarr;</a>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Port Name</th>
+                      <th>Dock Occupancy</th>
+                      <th>Capacity Usage</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="portOccupancyBody">
+                    <tr><td colspan="4" class="text-center text-muted py-3">Loading port data...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Recent Activity Table -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="m-0 fw-bold text-dark"><i class="bi bi-clock-history me-2 text-success"></i>Recent Movement History</h6>
+                <a href="reports.html" class="btn btn-sm btn-link text-decoration-none p-0 text-success fw-semibold">View History &rarr;</a>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Ship Name</th>
+                      <th>Route</th>
+                      <th>Movement Details</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody id="movementLogsBody">
+                    <tr><td colspan="4" class="text-center text-muted py-4">Loading activity logs...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (4 cols): Container Types Breakdown & Quick Actions -->
+          <div class="col-lg-4">
+            <!-- Container Types Progress List -->
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="m-0 fw-bold text-dark"><i class="bi bi-box-seam me-2 text-success"></i>Container Type Inventory</h6>
+                <a href="containers.html" class="btn btn-sm btn-link text-decoration-none p-0 text-success fw-semibold">Manage &rarr;</a>
+              </div>
+              <div class="card-body py-3" id="containerTypeList">
+                <div class="text-center text-muted py-3">Loading inventory...</div>
+              </div>
+            </div>
+
+            <!-- Quick Actions Panel -->
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="m-0 fw-bold text-dark"><i class="bi bi-lightning me-2 text-success"></i>Quick Actions</h6>
+              </div>
+              <div class="list-group list-group-flush">
+                <a href="simulation.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
+                  <div>
+                    <i class="bi bi-play-circle text-success me-2 fs-5"></i>
+                    <strong>Simulation Workbench</strong>
+                    <div class="small text-muted">Run and monitor real-time ship simulation</div>
+                  </div>
+                  <i class="bi bi-chevron-right text-muted"></i>
+                </a>
+                <a href="routes.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
+                  <div>
+                    <i class="bi bi-signpost-split text-dark me-2 fs-5"></i>
+                    <strong>Dispatch Route</strong>
+                    <div class="small text-muted">Calculate distance and assign ship destinations</div>
+                  </div>
+                  <i class="bi bi-chevron-right text-muted"></i>
+                </a>
+                <a href="containers.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
+                  <div>
+                    <i class="bi bi-box-arrow-in-right text-warning me-2 fs-5"></i>
+                    <strong>Load / Unload Cargo</strong>
+                    <div class="small text-muted">Manage container storage and ship loading</div>
+                  </div>
+                  <i class="bi bi-chevron-right text-muted"></i>
+                </a>
+                <a href="reports.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
+                  <div>
+                    <i class="bi bi-file-earmark-arrow-down text-secondary me-2 fs-5"></i>
+                    <strong>Export Reports</strong>
+                    <div class="small text-muted">Download CSV data for ships, ports & containers</div>
+                  </div>
+                  <i class="bi bi-chevron-right text-muted"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/config.js?v=3.0"></script>
+  <script src="js/auth.js?v=3.0"></script>
+  <script src="js/api.js?v=3.0"></script>
+  <script src="js/app.js?v=3.0"></script>
+  <script src="js/websocket.js?v=3.0"></script>
+  <script src="js/pages/dashboard.js?v=3.0"></script>
+</body>
+</html>

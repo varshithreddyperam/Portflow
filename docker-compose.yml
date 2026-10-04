@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  portflow-app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=super-secret-portflow-jwt-key-2026-production
+      - DATABASE_URL=sqlite:///./portflow.db
+    restart: always
